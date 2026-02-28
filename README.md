@@ -1,40 +1,191 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# 🫒 ZeytinLogger
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages). 
+_Developed with love by JeaFriday!💚🫒_
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages). 
--->
+**ZeytinLogger** is a fast and flexible logging package that allows you to catch error messages, analytics, test results, and information in your projects, and store and manage them locally (local storage) with the [ZeytinX](https://pub.dev/packages/zeytinx) infrastructure.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+---
 
-## Features
+## ✨ Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- **📦 Local Storage:** Safely stores your logs on the device without needing an internet connection.
+- **🗂️ Categorical Logging:** Keeps your data organized with 5 different log models (`Info`, `Success`, `Error`, `Attention`, `Any`).
+- **⏱️ Automatic Timestamp:** Automatically processes the current time (`timestamp`) instantly into every added log record.
+- **🔍 Advanced Filtering:** Allows you to perform advanced queries such as `where`, `contains`, `removeWhere` on logs.
+- **🧹 Easy Management:** Clear either a single category or all logs in a single line.
 
-## Getting started
+---
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+## 🚀 Installation
 
-## Usage
+Including ZeytinLogger in your project is very easy. You can add the package by typing the following command into your terminal:
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+**For Dart Projects:**
 
-```dart
-const like = 'sample';
+```bash
+dart pub add zeytinlogger
 ```
 
-## Additional information
+**For Flutter Projects:**
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
-# ZeytinLogger
+```bash
+flutter pub add zeytinlogger
+```
+
+Or add it manually to your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  zeytinlogger: ^1.0.0
+```
+
+Then import the package into your file:
+
+```dart
+import 'package:zeytinlogger/zeytinlogger.dart';
+```
+
+---
+
+## 🛠️ Getting Started
+
+Before using ZeytinLogger, you need to initialize it by specifying the directory where the logs will be saved.
+
+```dart
+void main() async {
+  final logger = ZeytinLogger();
+
+  // Initialize the package by specifying the folder path where the logs will be stored.
+  await logger.init('./logs_directory');
+}
+```
+
+> **Note:** In Flutter projects, you can obtain a secure folder path on mobile devices by using the `getApplicationDocumentsDirectory()` path with the `path_provider` package.
+
+---
+
+## 📖 Usage and Features
+
+ZeytinLogger manages your data in 5 different boxes. Each has its own models and methods.
+
+### 1. Adding Logs (Adding Logs)
+
+Select the log model that suits your needs and save it. Each record is automatically printed to the console in a colorful way and saved to local storage.
+
+```dart
+final logger = ZeytinLogger();
+
+// 💡 Information Log (Info)
+await logger.info(InfoLog(
+  message: 'Application started successfully.',
+  page: 'SplashView',
+  data: {'version': '1.0.0'}
+));
+
+// ✅ Success Log (Success)
+await logger.success(SuccessLog(
+  message: 'User logged into the system.',
+  page: 'LoginView',
+));
+
+// ❌ Error Log (Error)
+await logger.error(ErrorLog(
+  errorMessage: 'Server connection timed out.',
+  page: 'NetworkService',
+  stackTrace: StackTrace.current,
+));
+
+// ⚠️ Attention Log (Attention)
+await logger.attention(AttentionLog(
+  message: 'Device storage space is below 10%.',
+  data: {'freeSpace': '1.2GB'}
+));
+
+// 🔄 General Log (Any) - For custom trackings
+await logger.any(AnyLog(
+  tag: "user_action",
+  data: {'action': 'click', 'button': 'login'}
+));
+```
+
+### 2. Reading Logs (Fetching Logs)
+
+You can easily fetch the logs you saved based on their timestamp (from newest to oldest by default `descending: true`).
+
+```dart
+// Fetches all error logs.
+final allErrors = await logger.getErrorLogs();
+
+for (var error in allErrors) {
+  print('Error: ${error.errorMessage} - Time: ${error.timestamp}');
+}
+```
+
+### 3. Filtering Logs (Where)
+
+You can use `where` functions to list logs that satisfy a specific condition.
+
+```dart
+// Fetch only the errors that occurred on the NetworkService page.
+final networkErrors = await logger.whereErrorLogs(
+  (log) => log['page'] == 'NetworkService',
+);
+
+print('${networkErrors.length} network errors found.');
+```
+
+### 4. Record Checking (Contains)
+
+You can quickly check whether a specific record you are looking for exists as a boolean (`true/false`).
+
+```dart
+// Is there a warning about Storage (Storage)?
+final hasStorageWarning = await logger.containsAttentionLog(
+  (log) => log['message']?.contains('Storage') ?? false,
+);
+
+if(hasStorageWarning) {
+  print('Show storage warning to the user!');
+}
+```
+
+### 5. Conditional Deletion (RemoveWhere)
+
+You can bulk delete logs that meet specific conditions.
+
+```dart
+// Delete all Any logs whose action is 'click'.
+await logger.removeWhereAnyLog((log) => log['action'] == 'click');
+```
+
+### 6. Clearing (Clearing Logs)
+
+You can clear logs categorically or all at once.
+
+```dart
+// Clear only Info (Information) logs.
+await logger.clearInfoLogs();
+
+// Completely clear all logs in all categories from the database.
+await logger.clearAllLogs();
+```
+
+---
+
+## 🏗️ Models
+
+ZeytinLogger uses custom classes to keep data organized. All models take the `timestamp` (time stamp) parameter optionally; if not provided, it is created automatically.
+
+| Model          | Required Parameters  | Optional Parameters    | Purpose of Use                                 |
+| :------------- | :------------------- | :--------------------- | :--------------------------------------------- |
+| `InfoLog`      | `message`            | `page`, `data`         | General information and status notifications   |
+| `SuccessLog`   | `message`            | `page`                 | Successful operations (Login, Register etc.)   |
+| `ErrorLog`     | `errorMessage`       | `page`, `stackTrace`   | Errors (Try-catch blocks etc.)                 |
+| `AttentionLog` | `message`            | `page`, `data`         | Non-critical but attention-requiring situations|
+| `AnyLog`       | `tag`, `data`        | -                      | Custom analytic data, click metrics etc.       |
+
+---
+
+## 🤝 Contributing
+
+This project is open-source and open to your contributions! Please do not hesitate to open an Issue (problem) or submit a Pull Request (pull request).
