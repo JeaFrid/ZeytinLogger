@@ -2,6 +2,27 @@
 
 _Developed with love by JeaFriday!💚🫒_
 
+<p align="center">
+  <a href="https://buymeacoffee.com/jeafriday">
+    <img src="https://img.buymeacoffee.com/button-api/?text=Support me&emoji=☕&slug=jeafriday&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Support me" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/JeaFrid">
+    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
+  </a>
+  <a href="https://pub.dev/publishers/jeafriday.com/packages">
+    <img src="https://img.shields.io/badge/Pub.dev-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Pub.dev" />
+  </a>
+  <a href="https://www.linkedin.com/in/jeafriday/">
+    <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
+  </a>
+  <a href="https://t.me/jeafrid">
+    <img src="https://img.shields.io/badge/Telegram-26A8EA?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram" />
+  </a>
+</p>
+
 **ZeytinLogger** is a fast and flexible logging package that allows you to catch error messages, analytics, test results, and information in your projects, and store and manage them locally (local storage) with the [ZeytinX](https://pub.dev/packages/zeytinx) infrastructure.
 
 ---
